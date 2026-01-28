@@ -348,9 +348,11 @@ INPUT_WHITELIST=(
   # S922X
   "rk805 pwrkey" \
   # SM8550
-  "pmic_pwrkey" \
-  "gpio-keys"
+  "pmic_pwrkey"
 )
+
+# Ayn Thor gpio-keys contains lid events
+[[ "${QUIRK_DEVICE}" == "AYN Thor" ]] && INPUT_WHITELIST+=("gpio-keys")
 
 # Backlight power devices
 declare -a BL_POWER_DEVICES=()
