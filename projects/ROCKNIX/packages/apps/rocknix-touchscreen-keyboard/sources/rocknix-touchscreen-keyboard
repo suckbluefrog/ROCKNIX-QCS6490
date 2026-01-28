@@ -22,6 +22,7 @@ while true; do
       killall wvkbd-mobintl
     elif [[ "${DEVICE_HAS_DUAL_SCREEN}" == "true" ]]; then
       secondary_output=$(swaymsg -t get_outputs -r | jq -r '.[] | select(.focused == false) | .name')
+      swaymsg output ${secondary_output} power on
       if [[ ! "${QUIRK_DEVICE}" == "Anbernic RG DS" ]]; then
         tskb_height=720
         tskb_legend_size=35
