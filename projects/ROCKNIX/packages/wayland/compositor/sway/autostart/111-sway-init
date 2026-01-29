@@ -109,6 +109,7 @@ fi
 
 if [ "${QUIRK_DEVICE}" = "AYANEO Pocket DS" ]; then
   con="DSI-1"
+  echo 'for_window [app_id="emulationstation"] focus output DSI-1' >> $SWAY_HOME/config
   echo 'for_window [app_id="emulationstation"] reload' >> $SWAY_HOME/config
   echo 'input "1046:967:Goodix_Capacitive_TouchScreen" map_to_output DSI-2' >> $SWAY_HOME/config
   echo 'input "0:0:generic_ft5x06_(44)" map_to_output DSI-1' >> $SWAY_HOME/config
