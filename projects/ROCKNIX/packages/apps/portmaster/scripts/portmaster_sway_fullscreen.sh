@@ -12,6 +12,10 @@ if echo "${UI_SERVICE}" | grep -q "sway"; then
         TSKEY=$(get_setting "rocknix.touchscreen-keyboard.enabled")
         if [[ "${TSKEY}" == "1" ]]; then
             swaymsg 'output DSI-1 power on'
+            (
+              sleep 2
+              swaymsg 'seat seat1 fallback yes'
+            ) &
         fi
     fi
 fi
