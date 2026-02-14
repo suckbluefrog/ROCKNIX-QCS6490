@@ -246,3 +246,9 @@ fi
 
 # Delete existing swap file - disabled by default on all platforms in https://github.com/ROCKNIX/distribution/pull/2223
 rm -f /storage/.cache/swapfile
+
+# Move existing azahar save states to /roms/savestates/3ds
+if [[ -d "/storage/.config/azahar/states" && ! -d "/storage/roms/savestates/3ds" ]]; then
+  mkdir -p /storage/roms/savestates/3ds
+  cp -rf /storage/.config/azahar/states/* /storage/roms/savestates/3ds/
+fi
