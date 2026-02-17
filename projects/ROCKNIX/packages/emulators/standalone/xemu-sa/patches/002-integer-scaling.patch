@@ -12,7 +12,7 @@ index 3e36d1e5c6..bdcdcf4462 100644
      aspect_ratio:
        type: enum
 diff --git a/ui/xui/gl-helpers.cc b/ui/xui/gl-helpers.cc
-index cdef85861f..e090b9215d 100644
+index cdef85861f..c9ef938c12 100644
 --- a/ui/xui/gl-helpers.cc
 +++ b/ui/xui/gl-helpers.cc
 @@ -884,7 +884,7 @@ void ScaleDimensions(int src_width, int src_height, int max_width, int max_heigh
@@ -41,10 +41,20 @@ index cdef85861f..e090b9215d 100644
  
      glActiveTexture(GL_TEXTURE0);
      glBindTexture(GL_TEXTURE_2D, tex);
-@@ -960,6 +961,21 @@ void RenderFramebuffer(GLint tex, int width, int height, bool flip)
+@@ -958,8 +959,29 @@ void RenderFramebuffer(GLint tex, int width, int height, bool flip)
+     } else if (g_config.display.ui.fit == CONFIG_DISPLAY_UI_FIT_CENTER) {
+         // Centered
          float t_ratio = GetDisplayAspectRatio(tw, th);
-         scale[0] = t_ratio*(float)th/(float)width;
-         scale[1] = (float)th/(float)height;
+-        scale[0] = t_ratio*(float)th/(float)width;
+-        scale[1] = (float)th/(float)height;
++        int fb_height = th;
++        int fb_width = (int)(fb_height * t_ratio);
++        offset_x = (width - fb_width) / 2;
++        offset_y = (height - fb_height) / 2;
++        width = fb_width;
++        height = fb_height;
++        scale[0] = 1.0;
++        scale[1] = 1.0;
 +    } else if (g_config.display.ui.fit == CONFIG_DISPLAY_UI_FIT_INTEGER) {
 +        // Integer scaling
 +        float t_ratio = GetDisplayAspectRatio(tw, th);
@@ -63,7 +73,7 @@ index cdef85861f..e090b9215d 100644
      } else {
          float t_ratio = GetDisplayAspectRatio(tw, th);
          float w_ratio = (float)width/(float)height;
-@@ -972,12 +988,13 @@ void RenderFramebuffer(GLint tex, int width, int height, bool flip)
+@@ -972,12 +994,13 @@ void RenderFramebuffer(GLint tex, int width, int height, bool flip)
          }
      }
  
@@ -78,7 +88,7 @@ index cdef85861f..e090b9215d 100644
  
      glActiveTexture(GL_TEXTURE0);
      glBindTexture(GL_TEXTURE_2D, tex);
-@@ -998,7 +1015,7 @@ bool RenderFramebufferToPng(GLuint tex, bool flip, std::vector<uint8_t> &png, in
+@@ -998,7 +1021,7 @@ bool RenderFramebufferToPng(GLuint tex, bool flip, std::vector<uint8_t> &png, in
      bool blend = glIsEnabled(GL_BLEND);
      if (blend) glDisable(GL_BLEND);
      float scale[2] = {1.0, 1.0};
