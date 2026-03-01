@@ -144,7 +144,7 @@ fi
 
 # AYANEO Pocket S: force primary output to the internal DSI panel.
 # Some panel stacks expose extra connectors and sway can pick the wrong one.
-if [ "${QUIRK_DEVICE}" = "AYANEO Pocket S" ] || [ "${QUIRK_DEVICE}" = "AYANEO Pocket S 2K" ]; then
+if [ "${QUIRK_DEVICE}" = "AYANEO Pocket S 2K" ]; then
   if [ -n "${dsi}" ]; then
     con="${dsi}"
     echo "output ${con} transform ${angle}" >> $SWAY_HOME/config
