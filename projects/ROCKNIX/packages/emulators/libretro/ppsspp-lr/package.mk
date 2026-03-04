@@ -74,21 +74,20 @@ pre_configure_target() {
     ;;
   esac
 
-  PKG_CMAKE_OPTS_TARGET+=" \
-                          -DUSE_SYSTEM_FFMPEG=OFF \
-                          -DCMAKE_BUILD_TYPE=Release \
-                          -DCMAKE_SYSTEM_NAME=Linux \
-                          -DBUILD_SHARED_LIBS=OFF \
-                          -DANDROID=OFF \
-                          -DWIN32=OFF \
-                          -DAPPLE=OFF \
-                          -DLIBRETRO=ON \
-                          -DCMAKE_CROSSCOMPILING=ON \
-                          -DUSING_QT_UI=OFF \
-                          -DUNITTEST=OFF \
-                          -DSIMULATOR=OFF \
-                          -DHEADLESS=OFF \
-                          -DUSE_DISCORD=OFF"
+  PKG_CMAKE_OPTS_TARGET+=" -DUSE_SYSTEM_FFMPEG=OFF \
+                           -DCMAKE_BUILD_TYPE=Release \
+                           -DCMAKE_SYSTEM_NAME=Linux \
+                           -DBUILD_SHARED_LIBS=OFF \
+                           -DANDROID=OFF \
+                           -DWIN32=OFF \
+                           -DAPPLE=OFF \
+                           -DLIBRETRO=ON \
+                           -DCMAKE_CROSSCOMPILING=ON \
+                           -DUSING_QT_UI=OFF \
+                           -DUNITTEST=OFF \
+                           -DSIMULATOR=OFF \
+                           -DHEADLESS=OFF \
+                           -DUSE_DISCORD=OFF"
 }
 
 pre_make_target() {
