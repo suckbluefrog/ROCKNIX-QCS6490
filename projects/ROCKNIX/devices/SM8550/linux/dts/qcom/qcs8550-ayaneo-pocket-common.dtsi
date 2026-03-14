@@ -1305,7 +1305,7 @@
 	status = "okay";
 
 	zap-shader {
-		firmware-name = "qcom/sm8550/ayaneo/a740_zap.mbn";
+		firmware-name = "qcom/sm8550/a740_zap.mbn";
 	};
 };
 
