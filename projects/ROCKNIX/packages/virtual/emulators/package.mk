@@ -807,7 +807,7 @@ makeinstall_target() {
       add_emu_core n64 daedalusx64 daedalusx64-sa false
       install_script "Start DaedalusX64.sh"
     ;;
-  SM8550|SM8659)
+  SM8550|SM8650)
       add_emu_core n64 daedalusx64 daedalusx64-sa false
       add_emu_core n64 gopher64 gopher64-sa false
       install_script "Start DaedalusX64.sh"
