@@ -547,7 +547,7 @@
 
 		vreg_l5a_2p96: l5 {
 			regulator-min-microvolt = <1648000>;
-			regulator-max-microvolt = <3304000>;
+			regulator-max-microvolt = <3056000>;
 			regulator-allow-set-load;
 		};
 
@@ -559,6 +559,7 @@
 		vreg_l7a_1p256: l7 {
 			regulator-min-microvolt = <1200000>;
 			regulator-max-microvolt = <1304000>;
+			regulator-always-on;
 		};
 
 		vreg_l8a_0p664: l8 {
