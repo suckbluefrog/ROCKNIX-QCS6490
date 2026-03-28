@@ -58,9 +58,14 @@ case "${DEVICE}" in
                 xemu-sa skyemu-sa"
     LIBRETRO_CORES+=" beetle-psx-lr beetle-saturn-lr bsnes-lr bsnes-hd-lr dolphin-lr kronos-lr"
     ;;
-  SM8550|SM8650)
+  SM8550)
     [ "${ENABLE_32BIT}" == "true" ] && EMUS_32BIT="box86 daedalusx64-sa desmume-lr gpsp-lr pcsx_rearmed-lr"
     PKG_EMUS+=" aethersx2-sa azahar-sa bigpemu-sa cemu-sa dolphin-sa drastic-sa gopher64-sa mednafen melonds-sa nanoboyadvance-sa rpcs3-sa supermodel-sa \
+                xemu-sa skyemu-sa"
+    LIBRETRO_CORES+=" beetle-psx-lr beetle-saturn-lr bsnes-lr bsnes-hd-lr dolphin-lr kronos-lr"
+    ;;
+  SM8650)
+    PKG_EMUS+=" aethersx2-sa azahar-sa bigpemu-sa cemu-sa dolphin-sa gopher64-sa mednafen melonds-sa nanoboyadvance-sa rpcs3-sa supermodel-sa \
                 xemu-sa skyemu-sa"
     LIBRETRO_CORES+=" beetle-psx-lr beetle-saturn-lr bsnes-lr bsnes-hd-lr dolphin-lr kronos-lr"
     ;;
@@ -783,10 +788,13 @@ makeinstall_target() {
       add_emu_core n64 daedalusx64 daedalusx64-sa false
       install_script "Start DaedalusX64.sh"
       ;;
-    SM8550|SM8650)
+    SM8550)
       add_emu_core n64 daedalusx64 daedalusx64-sa false
       add_emu_core n64 gopher64 gopher64-sa false
       install_script "Start DaedalusX64.sh"
+      ;;
+    SM8650)
+      add_emu_core n64 gopher64 gopher64-sa false
       ;;
   esac
   add_es_system n64
@@ -956,9 +964,14 @@ makeinstall_target() {
       add_emu_core psx retroarch pcsx_rearmed32 true
       add_emu_core psx retroarch pcsx_rearmed false
       ;;
-    SDM845|SM8250|SM8550|SM8650)
+    SDM845|SM8250|SM8550)
       add_emu_core psx retroarch pcsx_rearmed32 true
       add_emu_core psx retroarch pcsx_rearmed false
+      add_emu_core psx retroarch beetle_psx false
+      add_emu_core psx mednafen psx false
+      ;;
+    SM8650)
+      add_emu_core psx retroarch pcsx_rearmed true
       add_emu_core psx retroarch beetle_psx false
       add_emu_core psx mednafen psx false
       ;;
