@@ -30,9 +30,7 @@ ROCKNIX is an immutable Linux distribution for handheld gaming devices developed
   </tr>
 </table>
 
-## Community
 
-The ROCKNIX community utilizes Discord for discussion, if you would like to join us please use this link: [https://discord.gg/seTxckZjJy](https://discord.gg/seTxckZjJy)
 
 ## Licenses
 
