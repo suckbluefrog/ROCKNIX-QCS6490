@@ -8,6 +8,7 @@ PKG_SITE="https://github.com/linux-msm/tqftpserv"
 PKG_URL="https://github.com/linux-msm/tqftpserv/archive/refs/tags/v${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_TARGET="toolchain systemd qrtr zstd"
 PKG_LONGDESC="tqftpserv"
+PKG_MAKEINSTALL_OPTS_TARGET="prefix=/usr"
 
 post_install() {
   enable_service tqftpserv.service

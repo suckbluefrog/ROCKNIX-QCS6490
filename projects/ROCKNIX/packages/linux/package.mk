@@ -34,6 +34,11 @@ case ${DEVICE} in
     PKG_VERSION="7.0"
     PKG_URL="https://www.kernel.org/pub/linux/kernel/v${PKG_VERSION/.*/}.x/${PKG_NAME}-${PKG_VERSION}.tar.xz"
     ;;
+  QCS6490)
+    PKG_VERSION="6.18.16"
+    PKG_URL="https://www.kernel.org/pub/linux/kernel/v${PKG_VERSION/.*/}.x/${PKG_NAME}-${PKG_VERSION}.tar.xz"
+    PKG_PATCH_DIRS+=" ${PROJECT_DIR}/${PROJECT}/devices/${DEVICE}/linux/patches"
+    ;;
   SM8550|SM8650)
     PKG_VERSION="6.19.5"
     PKG_URL="https://www.kernel.org/pub/linux/kernel/v${PKG_VERSION/.*/}.x/${PKG_NAME}-${PKG_VERSION}.tar.xz"
@@ -77,7 +82,7 @@ done
 
 if [ "${DEVICE}" = "RK3326" -o "${DEVICE}" = "RK3566" ]; then
   PKG_DEPENDS_UNPACK+=" generic-dsi"
-elif [ "${DEVICE}" = "SM8250" -o "${DEVICE}" = "SDM845" -o "${DEVICE}" = "H700" ]; then
+elif [ "${DEVICE}" = "SM8250" -o "${DEVICE}" = "SDM845" -o "${DEVICE}" = "QCS6490" -o "${DEVICE}" = "H700" ]; then
   PKG_DEPENDS_UNPACK+=" kernel-firmware"
 fi
 
@@ -99,6 +104,35 @@ post_patch() {
   DTS_SOURCE_DIR="${PROJECT_DIR}/${PROJECT}/devices/${DEVICE}/linux/dts"
   if [ -d "${DTS_SOURCE_DIR}" ]; then
     rsync -av "${DTS_SOURCE_DIR}/" ${PKG_BUILD}/arch/arm64/boot/dts/
+  fi
+
+  if [ "${DEVICE}" = "QCS6490" ]; then
+    DTS_MAKEFILE="${PKG_BUILD}/arch/arm64/boot/dts/qcom/Makefile"
+    if [ -f "${DTS_MAKEFILE}" ] && ! grep -q 'qcs6490-radxa-dragon-q6a.dtb' "${DTS_MAKEFILE}"; then
+      cat <<'EOF' >> "${DTS_MAKEFILE}"
+
+qcs6490-radxa-dragon-q6a-cam1-imx577-dtbs := qcs6490-radxa-dragon-q6a.dtb qcs6490-radxa-dragon-q6a-cam1-imx577.dtbo
+qcs6490-radxa-dragon-q6a-cam2-radxa-camera-8m-219-dtbs := qcs6490-radxa-dragon-q6a.dtb qcs6490-radxa-dragon-q6a-cam2-radxa-camera-8m-219.dtbo
+qcs6490-radxa-dragon-q6a-cam3-radxa-camera-8m-219-dtbs := qcs6490-radxa-dragon-q6a.dtb qcs6490-radxa-dragon-q6a-cam3-radxa-camera-8m-219.dtbo
+qcs6490-radxa-dragon-q6a-kvm-dtbs := qcs6490-radxa-dragon-q6a.dtb qcs6490-radxa-dragon-q6a-kvm.dtbo
+qcs6490-radxa-dragon-q6a-radxa-display-10fhd-dtbs := qcs6490-radxa-dragon-q6a.dtb qcs6490-radxa-dragon-q6a-radxa-display-10fhd.dtbo
+
+dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-radxa-dragon-q6a.dtb
+dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-radxa-dragon-q6a-cam1-imx577.dtb
+dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-radxa-dragon-q6a-cam2-radxa-camera-8m-219.dtb
+dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-radxa-dragon-q6a-cam3-radxa-camera-8m-219.dtb
+dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-radxa-dragon-q6a-kvm.dtb
+dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-radxa-dragon-q6a-radxa-display-10fhd.dtb
+EOF
+    fi
+  fi
+}
+
+get_kernel_makeflags() {
+  if [ "${DEVICE}" = "QCS6490" ]; then
+    echo "-j${QCS6490_KERNEL_JOBS:-2}"
+  else
+    echo "${MAKEFLAGS}"
   fi
 }
 
@@ -205,6 +239,30 @@ pre_make_target() {
 
     ${PKG_BUILD}/scripts/config --set-str CONFIG_EXTRA_FIRMWARE "${FW_LIST}"
     ${PKG_BUILD}/scripts/config --set-str CONFIG_EXTRA_FIRMWARE_DIR "external-firmware"
+  elif [ "${TARGET_ARCH}" = "aarch64" -a "${DEVICE}" = "QCS6490" ]; then
+    mkdir -p ${PKG_BUILD}/external-firmware/qcom/qcm6490
+    mkdir -p ${PKG_BUILD}/external-firmware/qcom/qcs6490
+    mkdir -p ${PKG_BUILD}/external-firmware/qcom/qcs6490/radxa/dragon-q6a
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/a660_gmu.bin ${PKG_BUILD}/external-firmware/qcom
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/a660_sqe.fw ${PKG_BUILD}/external-firmware/qcom
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcm6490/qupv3fw.elf ${PKG_BUILD}/external-firmware/qcom/qcm6490
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/a660_zap.mbn ${PKG_BUILD}/external-firmware/qcom/qcs6490
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/QCS6490-Radxa-Dragon-Q6A-tplg.bin ${PKG_BUILD}/external-firmware/qcom/qcs6490
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/adsp.mbn ${PKG_BUILD}/external-firmware/qcom/qcs6490
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/adspr.jsn ${PKG_BUILD}/external-firmware/qcom/qcs6490
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/adsps.jsn ${PKG_BUILD}/external-firmware/qcom/qcs6490
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/adspua.jsn ${PKG_BUILD}/external-firmware/qcom/qcs6490
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/cdsp.mbn ${PKG_BUILD}/external-firmware/qcom/qcs6490
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/cdspr.jsn ${PKG_BUILD}/external-firmware/qcom/qcs6490
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/radxa/dragon-q6a/adsp.mbn ${PKG_BUILD}/external-firmware/qcom/qcs6490/radxa/dragon-q6a
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/radxa/dragon-q6a/adspr.jsn ${PKG_BUILD}/external-firmware/qcom/qcs6490/radxa/dragon-q6a
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/radxa/dragon-q6a/adsps.jsn ${PKG_BUILD}/external-firmware/qcom/qcs6490/radxa/dragon-q6a
+      cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/qcs6490/radxa/dragon-q6a/adspua.jsn ${PKG_BUILD}/external-firmware/qcom/qcs6490/radxa/dragon-q6a
+
+    FW_LIST="$(find ${PKG_BUILD}/external-firmware -type f | sed 's|.*external-firmware/||' | sort | xargs)"
+
+    ${PKG_BUILD}/scripts/config --set-str CONFIG_EXTRA_FIRMWARE "${FW_LIST}"
+    ${PKG_BUILD}/scripts/config --set-str CONFIG_EXTRA_FIRMWARE_DIR "external-firmware"
   elif [ "${TARGET_ARCH}" = "aarch64" -a "${DEVICE}" = "SDM845" ]; then
     mkdir -p ${PKG_BUILD}/external-firmware/qcom/sdm845
       cp -Lv $(get_build_dir kernel-firmware)/.copied-firmware/qcom/a630_gmu.bin ${PKG_BUILD}/external-firmware/qcom
@@ -286,7 +344,7 @@ pre_make_target() {
 }
 
 make_target() {
-  DTC_FLAGS=-@ kernel_make ${KERNEL_TARGET} ${KERNEL_MAKE_EXTRACMD} modules
+  MAKEFLAGS="$(get_kernel_makeflags)" DTC_FLAGS=-@ kernel_make ${KERNEL_TARGET} ${KERNEL_MAKE_EXTRACMD} modules
 
   if [ "${PKG_BUILD_PERF}" = "yes" ]; then
     ( cd tools/perf

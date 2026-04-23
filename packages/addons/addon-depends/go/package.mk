@@ -13,21 +13,41 @@ PKG_TOOLCHAIN="manual"
 
 configure_host() {
   export GOROOT_FINAL=${TOOLCHAIN}/lib/golang
-  if [ -x /usr/local/go/bin/go ]; then
-    export GOROOT_BOOTSTRAP=/usr/local/go
-  elif [ -x /usr/lib/go/bin/go ]; then
-    export GOROOT_BOOTSTRAP=/usr/lib/go
+  if [ -n "${GOROOT_BOOTSTRAP}" ] && [ -x "${GOROOT_BOOTSTRAP}/bin/go" ]; then
+    true
   else
-    export GOROOT_BOOTSTRAP=/usr/lib/golang
+    local bootstrap_root=
+    local goroot=
+
+    for bootstrap_root in /usr/local/go /usr/lib/go /usr/lib/golang /usr/lib/go-*; do
+      if [ -x "${bootstrap_root}/bin/go" ]; then
+        export GOROOT_BOOTSTRAP="${bootstrap_root}"
+        break
+      fi
+    done
+
+    if [ -z "${GOROOT_BOOTSTRAP}" ] && command -v go >/dev/null 2>&1; then
+      goroot="$(go env GOROOT 2>/dev/null || true)"
+      if [ -n "${goroot}" ] && [ -x "${goroot}/bin/go" ]; then
+        export GOROOT_BOOTSTRAP="${goroot}"
+      fi
+    fi
   fi
 
-  if [ ! -d ${GOROOT_BOOTSTRAP} ]; then
+  if [ -z "${GOROOT_BOOTSTRAP}" ] || [ ! -x "${GOROOT_BOOTSTRAP}/bin/go" ]; then
     cat <<EOF
 ####################################################################
-# On Fedora 'dnf install golang' will install go to /usr/lib/golang
+# Install a Go bootstrap compiler before building this package.
 #
-# On Ubuntu you need to install golang:
+# Fedora:
+#   sudo dnf install golang
+#
+# Ubuntu / Debian:
 # $ sudo apt install golang-go
+# or, on newer Ubuntu releases:
+#   sudo apt install golang-1.23-go
+#
+# You can also export GOROOT_BOOTSTRAP to any existing Go root.
 ####################################################################
 EOF
     return 1

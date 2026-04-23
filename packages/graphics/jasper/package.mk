@@ -19,5 +19,13 @@ PKG_CMAKE_OPTS_TARGET="-DJAS_ENABLE_DOC=false \
                        -DJAS_STDC_VERSION=201710L"
 
 pre_configure_target() {
+  # Preserve the cross-compiled C standard level across CMake regenerations.
+  sed -i '/^if(NOT JAS_WASM)$/,/^\tif (JAS_STDC_VERSION STREQUAL "0L")$/c\
+if(NOT JAS_WASM)\
+\tset(JAS_STDC_VERSION "${JAS_STDC_VERSION}" CACHE STRING "The value of __STDC_VERSION__." FORCE)\
+\tif (NOT JAS_STDC_VERSION)\
+\t\tset(JAS_STDC_VERSION "0L")\
+\tendif()\
+\tif (JAS_STDC_VERSION STREQUAL "0L")' "${PKG_BUILD}/CMakeLists.txt"
   export CFLAGS="${CFLAGS} -std=gnu17"
 }

@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: suckbluefrog <suckbluefrog@proton.me>
+Date: Wed, 22 Apr 2026 11:28:00 +0300
+Subject: [PATCH] arm64: dts: qcom: qcs6490-radxa-dragon-q6a: disable ADSP and
+ CDSP for bring-up
+
+The ROCKNIX QCS6490 port currently enables the Dragon Q6A ADSP/CDSP
+remoteprocs, but the image does not yet ship the DTS-referenced firmware
+payloads. Disable both remoteprocs during early bring-up so boot failures can
+be isolated without DSP firmware and userspace service dependencies.
+---
+ arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts b/arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts
+index 7f7b263d0573..6e6f1dd7db98 100644
+--- a/arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts
++++ b/arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts
+@@ -913,11 +913,11 @@
+ 
+ &remoteproc_adsp {
+ 	firmware-name = "qcom/qcs6490/radxa/dragon-q6a/adsp.mbn";
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &remoteproc_cdsp {
+ 	firmware-name = "qcom/qcs6490/radxa/dragon-q6a/cdsp.mbn";
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &sdhc_1 {
+-- 
+2.49.0

@@ -1,0 +1,21 @@
+# DRM_MSM
+qcom/a660_gmu.bin
+qcom/a660_sqe.fw
+qcom/qcs6490/a660_zap.mbn
+qcom/qcs6490/QCS6490-Radxa-Dragon-Q6A-tplg.bin
+
+# QCOM_GENI_SE
+qcom/qcm6490/qupv3fw.elf
+
+# Remoteproc firmware carried by linux-firmware for this SoC family
+qcom/qcs6490/adsp.mbn
+qcom/qcs6490/adspr.jsn
+qcom/qcs6490/adsps.jsn
+qcom/qcs6490/adspua.jsn
+qcom/qcs6490/cdsp.mbn
+qcom/qcs6490/cdspr.jsn
+qcom/qcs6490/radxa/dragon-q6a/adsp.mbn
+qcom/qcs6490/radxa/dragon-q6a/adspr.jsn
+qcom/qcs6490/radxa/dragon-q6a/adsps.jsn
+qcom/qcs6490/radxa/dragon-q6a/adspua.jsn
+qcom/qcs6490/wpss.mbn

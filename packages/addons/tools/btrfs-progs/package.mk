@@ -28,10 +28,29 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-backtrace \
                            --disable-zstd"
 
 pre_configure_target() {
-  ./autogen.sh
+  (cd "${PKG_BUILD}" && ./autogen.sh)
+}
+
+configure_target() {
+  (
+    cd "${PKG_BUILD}"
+    echo "Executing (target): ${PKG_CONFIGURE_SCRIPT} ${TARGET_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_TARGET}" | tr -s " "
+    ${PKG_CONFIGURE_SCRIPT} ${TARGET_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_TARGET}
+  )
+}
+
+make_target() {
+  make -C "${PKG_BUILD}" ${PKG_MAKE_OPTS_TARGET}
+}
+
+makeinstall_target() {
+  if flag_enabled "sysroot" "yes"; then
+    make -C "${PKG_BUILD}" install DESTDIR=${SYSROOT_PREFIX} -j1 ${PKG_MAKEINSTALL_OPTS_TARGET}
+  fi
+  make -C "${PKG_BUILD}" install DESTDIR=${INSTALL} ${PKG_MAKEINSTALL_OPTS_TARGET}
 }
 
 addon() {
   mkdir -p ${ADDON_BUILD}/${PKG_ADDON_ID}/bin/
-    cp -P ${PKG_INSTALL}/usr/bin/{btrfs,btrfsck,btrfstune,fsck.btrfs,mkfs.btrfs} ${ADDON_BUILD}/${PKG_ADDON_ID}/bin
+    cp -P ${PKG_INSTALL}/usr/sbin/{btrfs,btrfsck,btrfstune,fsck.btrfs,mkfs.btrfs} ${ADDON_BUILD}/${PKG_ADDON_ID}/bin
 }

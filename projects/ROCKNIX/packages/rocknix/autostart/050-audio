@@ -40,12 +40,15 @@ fi
 
 ### Set the primary card volume to 100%
 ### to eliminate low audio on some devices.
- amixer -c ${ALSA_PRIMARY_CARD:-0} -q sset "Master" 100%
+if amixer -c ${ALSA_PRIMARY_CARD:-0} scontrols 2>/dev/null | grep -q "Simple mixer control 'Master',0"
+then
+  amixer -c ${ALSA_PRIMARY_CARD:-0} -q sset "Master" 100%
+fi
 
 ### Now set the pipewire mixer volume
 /usr/bin/volume ${VOLUME}
 
-### Run quantum audio hack if exists
-if [ -n "/usr/sbin/quantum" ]; then
+### Run quantum audio hack if it exists.
+if [ -x /usr/sbin/quantum ]; then
   /usr/sbin/quantum
 fi

@@ -253,6 +253,9 @@ if [ -f "${PKG_CONFIGURE_SCRIPT}" -o -f "${PKG_CMAKE_SCRIPT}" -o -f "${PKG_MESON
       ;;
     "bootstrap") PKG_REAL_BUILD="${PKG_BUILD}/.${HOST_NAME}-${TARGET}" ;;
   esac
+  if [ "${PKG_TOOLCHAIN}" = "meson" ]; then
+    prepare_meson_build_dir "${PKG_REAL_BUILD}"
+  fi
   mkdir -p "${PKG_REAL_BUILD}"
   cd "${PKG_REAL_BUILD}"
 

@@ -1,0 +1,50 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -135,6 +135,14 @@ find_package(Boost COMPONENTS program_options filesystem nowide REQUIRED)
+ find_package(libzip REQUIRED)
+ find_package(glslang REQUIRED)
+ find_package(ZLIB REQUIRED)
++
++# glslang 15 keeps SPIRV-Tools as separate imported targets, and its static
++# archive no longer pulls them in cleanly through older downstream link logic.
++if (glslang_VERSION VERSION_GREATER_EQUAL "15.0.0")
++	find_package(SPIRV-Tools CONFIG REQUIRED)
++	find_package(SPIRV-Tools-opt CONFIG REQUIRED)
++endif()
++
+ find_package(zstd MODULE REQUIRED) # MODULE so that zstd::zstd is available
+ find_package(OpenSSL COMPONENTS Crypto SSL REQUIRED)
+ find_package(glm REQUIRED)
+--- a/src/Cafe/CMakeLists.txt
++++ b/src/Cafe/CMakeLists.txt
+@@ -533,25 +533,31 @@ if (glslang_VERSION VERSION_LESS "15.0.0")
+ 	set(glslang_target "glslang::SPIRV")
+ else()
+ 	set(glslang_target "glslang")
+ endif()
++
++set(glslang_extra_targets "")
++if (glslang_VERSION VERSION_GREATER_EQUAL "15.0.0")
++	list(APPEND glslang_extra_targets SPIRV-Tools-static SPIRV-Tools-opt)
++endif()
+ 
+ target_link_libraries(CemuCafe PRIVATE
+ 	CemuAsm
+ 	CemuAudio
+ 	CemuCommon
+ 	CemuComponents
+ 	CemuConfig
+ 	CemuGui
+ 	CemuInput
+ 	CemuResource
+ 	CemuUtil
+ 	imguiImpl
+ 	Boost::headers
+ 	Boost::nowide
+ 	CURL::libcurl
+ 	fmt::fmt
+ 	${glslang_target}
++	${glslang_extra_targets}
+ 	ih264d
+ 	OpenSSL::Crypto
+ 	OpenSSL::SSL

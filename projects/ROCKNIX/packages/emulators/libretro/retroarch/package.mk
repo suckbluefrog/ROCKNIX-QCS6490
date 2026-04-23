@@ -108,6 +108,15 @@ make_target() {
 }
 
 makeinstall_target() {
+  local retroarch_source_device="${DEVICE}"
+
+  case "${DEVICE}" in
+    QCS6490)
+      # Temporary SBC-oriented fallback until QCS6490 gets its own preset set.
+      [ -d "${PKG_DIR}/sources/${DEVICE}" ] || retroarch_source_device="RK3588"
+    ;;
+  esac
+
   mkdir -p ${INSTALL}/usr/bin
   cp ${PKG_BUILD}/retroarch ${INSTALL}/usr/bin
   mkdir -p ${INSTALL}/usr/share/retroarch/filters
@@ -135,8 +144,8 @@ makeinstall_target() {
 
   # General configuration
   mkdir -p ${INSTALL}/usr/config/retroarch/
-  if [ -d "${PKG_DIR}/sources/${DEVICE}" ]; then
-    cp -rf ${PKG_DIR}/sources/${DEVICE}/* ${INSTALL}/usr/config/retroarch/
+  if [ -d "${PKG_DIR}/sources/${retroarch_source_device}" ]; then
+    cp -rf ${PKG_DIR}/sources/${retroarch_source_device}/* ${INSTALL}/usr/config/retroarch/
   else
     echo "Configure retroarch for ${DEVICE}"
     exit 1

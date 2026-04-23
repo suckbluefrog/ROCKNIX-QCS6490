@@ -11,9 +11,10 @@ PKG_LONGDESC="Quirks is a simple package that provides device quirks."
 PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {
-  mkdir -p ${INSTALL}/usr/lib/autostart/quirks/{platforms,devices}
+  mkdir -p ${INSTALL}/usr/lib/autostart/quirks/platforms
+  mkdir -p ${INSTALL}/usr/lib/autostart/quirks/devices
   cp -r ${PKG_DIR}/devices/* ${INSTALL}/usr/lib/autostart/quirks/devices
-  if [ -d "${PKG_DIR}/platforms/${DEVICE}" ]
+  if [ -d "${PKG_DIR}/platforms" ]
   then
     cp -r ${PKG_DIR}/platforms/* ${INSTALL}/usr/lib/autostart/quirks/platforms
   fi

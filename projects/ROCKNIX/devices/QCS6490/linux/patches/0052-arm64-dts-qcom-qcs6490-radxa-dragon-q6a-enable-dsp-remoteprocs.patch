@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: suckbluefrog <suckbluefrog@proton.me>
+Date: Wed, 22 Apr 2026 17:40:00 +0300
+Subject: [PATCH] arm64: dts: qcom: qcs6490-radxa-dragon-q6a: enable DSP
+ remoteprocs
+
+The QCS6490 kernel-firmware package now stages the public ADSP/CDSP blobs used
+by the Dragon Q6A audio and DSP stack. Re-enable the DSP remoteprocs and point
+CDSP at the generic firmware path shipped by linux-firmware.
+---
+ arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts b/arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts
+index 65de50870792..0f17fd0b4b92 100644
+--- a/arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts
++++ b/arch/arm64/boot/dts/qcom/qcs6490-radxa-dragon-q6a.dts
+@@ -914,11 +914,11 @@ &qupv3_id_1 {
+ 
+ &remoteproc_adsp {
+ 	firmware-name = "qcom/qcs6490/radxa/dragon-q6a/adsp.mbn";
+-	status = "disabled";
++	status = "okay";
+ };
+ 
+ &remoteproc_cdsp {
+-	firmware-name = "qcom/qcs6490/radxa/dragon-q6a/cdsp.mbn";
+-	status = "disabled";
++	firmware-name = "qcom/qcs6490/cdsp.mbn";
++	status = "okay";
+ };
+ 
+ &sdhc_1 {
+-- 
+2.49.0

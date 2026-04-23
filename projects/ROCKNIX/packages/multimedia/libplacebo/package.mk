@@ -17,5 +17,7 @@ else
 fi
 
 pre_configure_target() {
+  # libplacebo's glslang fallback still needs the main glslang archive added
+  # explicitly, even after trimming obsolete component probes for glslang 15.
   export TARGET_LDFLAGS="${LDFLAGS} -lglslang"
 }
