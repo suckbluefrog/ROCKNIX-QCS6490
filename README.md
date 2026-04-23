@@ -1,9 +1,11 @@
 
-Community Build of QCS6490 for Dragon Q6A
-NOT SUPPORTED by ROCKNIX TEAM
-USE AT YOUR OWN RISK. NO SUPPORT PROVIDED
+## Important
 
+- Community Build of QCS6490 for Dragon Q6A
+- NOT SUPPORTED by ROCKNIX TEAM -- Do not ask for support from their discord.
+- USE AT YOUR OWN RISK. NO SUPPORT PROVIDED
 
+--
 
 
 
