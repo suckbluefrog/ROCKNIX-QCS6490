@@ -13,20 +13,9 @@
 
 ---
 
-ROCKNIX is an immutable Linux distribution for handheld gaming devices developed by a small community of enthusiasts.  Our goal is to produce an operating system that has the features and capabilities that we need, and to have fun as we develop it.
 
-## Features
 
-* ROCKNIX has a very active community of developers and users.
-* Integrated cross-device local and remote network play.
-* In-game touch support on supported devices.
-* Fine grain control for battery life or performance.
-* Includes support for playing Music and Video.
-* Bluetooth audio and controller support.
-* Support for HDMI audio and video out, and USB audio.
-* Device to device and device to cloud sync with Syncthing and rclone.
-* VPN support with Wireguard, Tailscale, and ZeroTier.
-* Includes built-in support for scraping and retroachievements.
+
 
 ## Screenshots
 
